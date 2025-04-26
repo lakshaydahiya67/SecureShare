@@ -35,7 +35,7 @@ SecureShare is a secure file sharing platform built with Django that enables sec
    ```
 3. Install required dependencies:
    ```bash
-   pip install requirements.txt
+   pip install -r requirements.txt
    ```
 
 ### Configuration
