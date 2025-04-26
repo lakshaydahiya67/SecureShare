@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Files | SecureShare{% endblock %}
+
+{% block content %}
+<div class="file-upload-container">
+    <h2>Upload Files</h2>
+    <p class="file-info">You can upload .pptx, .docx, or .xlsx files</p>
+    
+    <form class="file-form" id="upload-form" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">File Title</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        
+        <div class="form-group file-drop-area">
+            <label for="file">Choose File</label>
+            <input type="file" id="file" name="file" accept=".pptx,.docx,.xlsx" required>
+            <div class="file-preview">
+                <p>No file selected</p>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Upload File</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Auth check
+    document.addEventListener('DOMContentLoaded', () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/login/';
+        }
+    });
+    
+    // File selection preview
+    document.getElementById('file').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        const preview = document.querySelector('.file-preview');
+        
+        if (file) {
+            preview.innerHTML = `<p>Selected: ${file.name}</p>`;
+        } else {
+            preview.innerHTML = `<p>No file selected</p>`;
+        }
+    });
+    
+    // Upload form submission
+    document.getElementById('upload-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const token = localStorage.getItem('token');
+        const formData = new FormData();
+        formData.append('title', document.getElementById('title').value);
+        formData.append('file', document.getElementById('file').files[0]);
+        
+        try {
+            const response = await fetch('/api/files/upload/', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                },
+                body: formData,
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                alert('File uploaded successfully!');
+                document.getElementById('upload-form').reset();
+            } else {
+                alert(data.error || 'Upload failed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SecureShare{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="{% url 'home' %}" class="logo">SecureShare</a>
+            <nav>
+                <ul id="nav-links">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li id="ops-upload-link" class="hidden"><a href="{% url 'file-upload' %}">Upload Files</a></li>
+                    <li id="ops-files-link" class="hidden"><a href="{% url 'file-list' %}">View All Files</a></li>
+                    <li id="client-files-link" class="hidden"><a href="{% url 'file-list' %}">My Files</a></li>
+                    <li id="login-link"><a href="{% url 'login' %}">Login</a></li>
+                    <li id="signup-link"><a href="{% url 'signup' %}" class="btn">Sign Up</a></li>
+                    <li id="logout-link" class="hidden"><a href="#" onclick="handleLogout(event)">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message message-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 SecureShare. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Check authentication and update navigation on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            const userType = localStorage.getItem('userType');
+            
+            if (token) {
+                // User is logged in
+                document.getElementById('login-link').classList.add('hidden');
+                document.getElementById('signup-link').classList.add('hidden');
+                document.getElementById('logout-link').classList.remove('hidden');
+                
+                if (userType === 'OPS') {
+                    document.getElementById('ops-upload-link').classList.remove('hidden');
+                    document.getElementById('ops-files-link').classList.remove('hidden');
+                } else if (userType === 'CLIENT') {
+                    document.getElementById('client-files-link').classList.remove('hidden');
+                }
+            }
+        });
+        
+        // Handle logout
+        function handleLogout(event) {
+            event.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('userType');
+            window.location.href = '{% url "home" %}';
+        }
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

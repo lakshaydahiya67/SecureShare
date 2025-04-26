@@ -1,0 +1,430 @@
+/* General Styling */
+:root {
+    --primary: #3b6fff;
+    --primary-dark: #2a5ae0;
+    --secondary: #7c3aed;
+    --danger: #ef4444;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --dark: #1f2937;
+    --light: #f9fafb;
+    --gray: #6b7280;
+    --gray-light: #e5e7eb;
+    --shadow: rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f0f2f5;
+    color: var(--dark);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.15s ease-in-out;
+}
+
+.btn:hover {
+    background-color: var(--primary-dark);
+    text-decoration: none;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-danger {
+    background-color: var(--danger);
+}
+
+.btn-danger:hover {
+    background-color: #dc2626;
+}
+
+/* Header */
+header {
+    background-color: white;
+    box-shadow: 0 1px 2px var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* Main Content */
+main {
+    flex: 1;
+    padding: 2rem 0;
+}
+
+/* Messages */
+.messages {
+    margin-bottom: 1.5rem;
+}
+
+.message {
+    padding: 0.75rem 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.message-success {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.message-error {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+/* Auth Forms */
+.auth-container {
+    max-width: 480px;
+    margin: 2rem auto;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px var(--shadow);
+    padding: 2rem;
+}
+
+.auth-container h2 {
+    margin-bottom: 1.5rem;
+    color: var(--dark);
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--dark);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--gray-light);
+    border-radius: 0.25rem;
+    font-size: 1rem;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+.form-actions {
+    margin-top: 1.5rem;
+}
+
+.form-actions .btn {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--gray);
+}
+
+/* File Upload */
+.file-upload-container {
+    max-width: 640px;
+    margin: 2rem auto;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px var(--shadow);
+    padding: 2rem;
+}
+
+.file-upload-container h2 {
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+}
+
+.file-info {
+    color: var(--gray);
+    margin-bottom: 1.5rem;
+}
+
+.file-drop-area {
+    border: 2px dashed var(--gray-light);
+    padding: 2rem;
+    text-align: center;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.file-drop-area input {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+}
+
+.file-drop-area label {
+    display: block;
+    font-weight: 500;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+}
+
+.file-preview {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--gray);
+}
+
+/* Files List */
+.files-container {
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
+.files-container h2 {
+    margin-bottom: 1.5rem;
+    color: var(--dark);
+}
+
+.files-list .loading {
+    text-align: center;
+    color: var(--gray);
+    padding: 2rem 0;
+}
+
+.file-item {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px var(--shadow);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.file-info h3 {
+    color: var(--dark);
+    margin-bottom: 0.25rem;
+}
+
+.file-info p {
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+.no-files {
+    text-align: center;
+    color: var(--gray);
+    padding: 2rem 0;
+}
+
+.error {
+    color: var(--danger);
+    text-align: center;
+    padding: 1rem 0;
+}
+
+/* Footer */
+footer {
+    background-color: white;
+    border-top: 1px solid var(--gray-light);
+    padding: 1.5rem 0;
+    text-align: center;
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header .container {
+        flex-direction: column;
+    }
+    
+    .logo {
+        margin-bottom: 1rem;
+    }
+    
+    .file-item {
+        flex-direction: column;
+    }
+    
+    .file-actions {
+        margin-top: 1rem;
+        width: 100%;
+    }
+    
+    .file-actions .btn {
+        width: 100%;
+    }
+}
+/* Add these styles to your existing CSS file */
+
+/* Hidden class for nav items */
+.hidden {
+    display: none !important;
+}
+
+/* Home page styles */
+.home-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.hero {
+    text-align: center;
+    padding: 3rem 1rem;
+    margin-bottom: 3rem;
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px var(--shadow);
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.hero .lead {
+    font-size: 1.25rem;
+    color: var(--gray);
+    margin-bottom: 2rem;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.feature-card {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px var(--shadow);
+}
+
+.feature-card h3 {
+    color: var(--primary);
+    margin-bottom: 0.75rem;
+}
+
+/* Header and logo */
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.logo:hover {
+    text-decoration: none;
+    color: var(--primary-dark);
+}
+
+/* Email verification styles */
+.verification-result {
+    text-align: center;
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+.verification-result.success {
+    color: #0f5132;
+}
+
+.verification-result.error {
+    color: #842029;
+}
+
+.verification-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}

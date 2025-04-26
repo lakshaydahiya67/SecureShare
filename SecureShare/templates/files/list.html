@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Available Files | SecureShare{% endblock %}
+
+{% block content %}
+<div class="files-container">
+    <h2>Available Files</h2>
+    
+    <div class="files-list" id="files-list">
+        <div class="loading">Loading files...</div>
+    </div>
+</div>
+
+<script>
+    // Auth check
+    document.addEventListener('DOMContentLoaded', async () => {
+        const token = localStorage.getItem('token');
+        const userType = localStorage.getItem('userType');
+        
+        if (!token) {
+            window.location.href = '/login/';
+            return;
+        }
+        
+        const filesList = document.getElementById('files-list');
+        const pageTitle = document.querySelector('h2');
+        
+        // Update title based on user type
+        if (userType === 'OPS') {
+            pageTitle.textContent = 'All Uploaded Files';
+        } else {
+            pageTitle.textContent = 'Available Files';
+        }
+        
+        try {
+            const response = await fetch('/api/files/list/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                },
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                if (data.length === 0) {
+                    filesList.innerHTML = '<p class="no-files">No files available</p>';
+                } else {
+                    let html = '';
+                    data.forEach(file => {
+                        const date = new Date(file.uploaded_at).toLocaleDateString();
+                        html += `
+                            <div class="file-item">
+                                <div class="file-info">
+                                    <h3>${file.title}</h3>
+                                    <p>Uploaded: ${date}</p>
+                                </div>
+                                <div class="file-actions">
+                                    <button class="btn btn-primary download-btn" data-id="${file.id}">
+                                        Download
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    filesList.innerHTML = html;
+                    
+                    // Add event listeners to download buttons
+                    document.querySelectorAll('.download-btn').forEach(button => {
+                        button.addEventListener('click', getDownloadLink);
+                    });
+                }
+            } else {
+                filesList.innerHTML = '<p class="error">Failed to load files</p>';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            filesList.innerHTML = '<p class="error">An error occurred while loading files</p>';
+        }
+    });
+    
+    async function getDownloadLink(e) {
+        const fileId = e.target.dataset.id;
+        const token = localStorage.getItem('token');
+        
+        try {
+            const response = await fetch(`/api/files/download-link/${fileId}/`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                },
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                window.open(data.download_link, '_blank');
+            } else {
+                alert(data.error || 'Download failed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        }
+    }
+</script>
+{% endblock %}

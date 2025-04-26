@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up | SecureShare{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <h2>Create a Client Account</h2>
+    
+    <form class="auth-form" id="signup-form">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password_confirm">Confirm Password</label>
+            <input type="password" id="password_confirm" name="password_confirm" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="user_type">Account Type</label>
+            <select id="user_type" name="user_type">
+                <option value="CLIENT">Client User</option>
+                <option value="OPS">Operations User</option>
+            </select>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+        </div>
+        
+        <p class="form-footer">
+            Already have an account? <a href="{% url 'login' %}">Login</a>
+        </p>
+    </form>
+</div>
+
+<script>
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const password_confirm = document.getElementById('password_confirm').value;
+        const user_type = document.getElementById('user_type').value;
+        
+        try {
+            const response = await fetch('/api/users/signup/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    email, 
+                    password, 
+                    password_confirm,
+                    user_type
+                }),
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                alert('Account created successfully! Since we are in development mode, please check the terminal for the verification link.');
+                window.location.href = '/login/';
+            } else {
+                // Show specific error messages if available
+                if (data.email) {
+                    alert(`Email error: ${data.email}`);
+                } else if (data.password) {
+                    alert(`Password error: ${data.password}`);
+                } else {
+                    const errorMessages = Object.values(data).flat().join('\n');
+                    alert(errorMessages || 'Signup failed');
+                }
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred during signup. Please try again.');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}SecureShare - Secure File Sharing{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <div class="hero">
+        <h1>Welcome to SecureShare</h1>
+        <p class="lead">Secure file sharing for organizations and clients</p>
+        
+        <div class="hero-actions">
+            <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+            <a href="{% url 'signup' %}" class="btn">Sign Up</a>
+        </div>
+    </div>
+    
+    <div class="features">
+        <div class="feature-card">
+            <h3>Secure Upload</h3>
+            <p>Operations users can securely upload documents that only authorized clients can access.</p>
+        </div>
+        
+        <div class="feature-card">
+            <h3>Encrypted Downloads</h3>
+            <p>Files are available through secure, encrypted links that expire after use.</p>
+        </div>
+        
+        <div class="feature-card">
+            <h3>User Verification</h3>
+            <p>All client users are verified through email to ensure secure access.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
