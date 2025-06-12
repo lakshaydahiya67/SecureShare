@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import base64
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +31,7 @@ SECRET_KEY = 'django-insecure-1b^8&5%c$sgunvrkv0b#wpgd(ryc#2r5+w=h7(9f3-f5d$j1!d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -152,6 +156,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For developm
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Gemini AI Configuration
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
+
 # REST framework settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -164,3 +171,5 @@ REST_FRAMEWORK = {
 
 # Generate a stable encryption key - in production use environment variables instead
 ENCRYPTION_KEY = base64.urlsafe_b64encode(os.urandom(32))
+
+CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']

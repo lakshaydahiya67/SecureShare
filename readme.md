@@ -12,6 +12,7 @@ SecureShare is a secure file sharing platform built with Django that enables sec
 - **Secure File Storage**: Files are stored with unique identifiers and accessed through encrypted tokens
 - **Single-Use Download Links**: Each download link is valid for 24 hours and expires after use
 - **File Type Validation**: Only supports secure document formats (.docx, .pptx, .xlsx)
+- **AI-Powered File Summarization**: Generate intelligent summaries of document contents using Google Gemini AI
 
 ### Security Features
 - **Token-Based Authentication**: RESTful API with secure token authentication
@@ -33,6 +34,7 @@ SecureShare is a secure file sharing platform built with Django that enables sec
 - **Authentication**: Django Token Authentication
 - **File Security**: Cryptography library with Fernet encryption
 - **Email**: Django Email Framework (console backend for development)
+- **AI Integration**: Google Gemini for document analysis and summarization
 
 ## Project Structure
 
@@ -59,6 +61,7 @@ SecureShare/
 - `GET /api/files/list/` - List available files
 - `GET /api/files/download-link/{file_id}/` - Get secure download link
 - `GET /api/files/download/{token}/` - Download file with token
+- `GET /api/files/summarize/{file_id}/` - Generate AI summary of file content
 
 ### Web Interface
 - `/` - Landing page
@@ -111,11 +114,17 @@ SecureShare/
    python manage.py createsuperuser
    ```
 
-4. Configure email settings in `settings.py` for your environment:
+4. Configure environment variables:
+   ```bash
+   # Create .env file in the project root
+   GEMINI_API_KEY=your-gemini-api-key-here
+   ```
+
+5. Configure email settings in `settings.py` for your environment:
    - For development: Uses console backend (emails printed to console)
    - For production: Configure SMTP settings
 
-5. For production deployment:
+6. For production deployment:
    - Set a secure `SECRET_KEY` in environment variables
    - Set `DEBUG = False`
    - Configure proper database (PostgreSQL recommended)
@@ -141,6 +150,7 @@ SecureShare/
 2. **Login** to access the upload interface
 3. **Upload Files**: Navigate to `/upload/` to upload .docx, .pptx, or .xlsx files
 4. **Manage Files**: View all uploaded files and their download statistics
+5. **AI Summaries**: Use the "Summarize" button to get intelligent AI-generated summaries of file contents
 
 ### For Client Users
 
@@ -148,7 +158,8 @@ SecureShare/
 2. **Verify Email**: Check your email and click the verification link
 3. **Login** to access the file listing
 4. **Download Files**: View available files and get secure download links
-5. **Access Files**: Use the provided links to download files (links expire after 24 hours)
+5. **AI Summaries**: Use the "Summarize" button to get quick overviews of file contents before downloading
+6. **Access Files**: Use the provided links to download files (links expire after 24 hours)
 
 ### API Usage
 
@@ -181,8 +192,11 @@ Key packages used in this project:
 - **Django 5.2**: Web framework
 - **Django REST Framework**: API development
 - **cryptography**: File encryption and token security
-- **SQLAlchemy**: Database ORM (for future enhancements)
-- **uvicorn**: ASGI server support
+- **Google Generative AI**: AI-powered document analysis and summarization
+- **python-docx**: Word document processing
+- **python-pptx**: PowerPoint document processing  
+- **openpyxl**: Excel document processing
+- **python-dotenv**: Environment variable management
 
 ### Database Models
 
@@ -210,6 +224,7 @@ EMAIL_HOST=your-smtp-host
 EMAIL_HOST_USER=your-email
 EMAIL_HOST_PASSWORD=your-email-password
 ENCRYPTION_KEY=your-32-byte-encryption-key
+GEMINI_API_KEY=your-gemini-api-key
 ```
 
 ### Security Checklist

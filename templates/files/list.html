@@ -50,7 +50,7 @@
                     data.forEach(file => {
                         const date = new Date(file.uploaded_at).toLocaleDateString();
                         html += `
-                            <div class="file-item">
+                            <div class="file-item" data-file-id="${file.id}">
                                 <div class="file-info">
                                     <h3>${file.title}</h3>
                                     <p>Uploaded: ${date}</p>
@@ -58,6 +58,9 @@
                                 <div class="file-actions">
                                     <button class="btn btn-primary download-btn" data-id="${file.id}">
                                         Download
+                                    </button>
+                                    <button class="btn btn-secondary summarize-btn" data-id="${file.id}">
+                                        Summarize
                                     </button>
                                 </div>
                             </div>
@@ -68,6 +71,16 @@
                     // Add event listeners to download buttons
                     document.querySelectorAll('.download-btn').forEach(button => {
                         button.addEventListener('click', getDownloadLink);
+                    });
+                    
+                    // Add event listeners to summarize buttons
+                    document.querySelectorAll('.summarize-btn').forEach(button => {
+                        button.addEventListener('click', getSummary);
+                    });
+                    
+                    // Add event listeners to summarize buttons
+                    document.querySelectorAll('.summarize-btn').forEach(button => {
+                        button.addEventListener('click', getSummary);
                     });
                 }
             } else {
@@ -101,6 +114,84 @@
         } catch (error) {
             console.error('Error:', error);
             alert('An error occurred. Please try again.');
+        }
+    }
+    
+    async function getSummary(e) {
+        const fileId = e.target.dataset.id;
+        const token = localStorage.getItem('token');
+        const fileItem = document.querySelector(`[data-file-id="${fileId}"]`);
+        
+        // Check if summary is already shown
+        let summaryDiv = fileItem.querySelector('.file-summary');
+        if (summaryDiv) {
+            // Toggle summary visibility
+            summaryDiv.remove();
+            return;
+        }
+        
+        // Create and show loading summary div
+        summaryDiv = document.createElement('div');
+        summaryDiv.className = 'file-summary loading';
+        summaryDiv.innerHTML = '<div class="spinner"></div>Generating summary...';
+        fileItem.appendChild(summaryDiv);
+        
+        try {
+            const response = await fetch(`/api/files/summarize/${fileId}/`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                },
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                // Show successful summary
+                summaryDiv.className = 'file-summary';
+                summaryDiv.innerHTML = `
+                    <h4>File Summary</h4>
+                    <div class="summary-content">${data.summary}</div>
+                    <div class="summary-actions">
+                        <button class="btn btn-secondary" onclick="collapseSummary('${fileId}')">
+                            Collapse
+                        </button>
+                    </div>
+                `;
+            } else {
+                // Show error
+                summaryDiv.className = 'file-summary error';
+                summaryDiv.innerHTML = `
+                    <h4>Summary Error</h4>
+                    <div class="summary-content">Something went wrong, try again</div>
+                    <div class="summary-actions">
+                        <button class="btn btn-secondary" onclick="collapseSummary('${fileId}')">
+                            Close
+                        </button>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            // Show error
+            summaryDiv.className = 'file-summary error';
+            summaryDiv.innerHTML = `
+                <h4>Summary Error</h4>
+                <div class="summary-content">Something went wrong, try again</div>
+                <div class="summary-actions">
+                    <button class="btn btn-secondary" onclick="collapseSummary('${fileId}')">
+                        Close
+                    </button>
+                </div>
+            `;
+        }
+    }
+    
+    function collapseSummary(fileId) {
+        const fileItem = document.querySelector(`[data-file-id="${fileId}"]`);
+        const summaryDiv = fileItem.querySelector('.file-summary');
+        if (summaryDiv) {
+            summaryDiv.remove();
         }
     }
 </script>

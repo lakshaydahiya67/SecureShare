@@ -65,3 +65,5 @@ media/uploads/*
 htmlcov/
 .pytest_cache/
 .tox/
+
+.github/

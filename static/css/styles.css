@@ -72,6 +72,14 @@ a:hover {
     background-color: var(--primary-dark);
 }
 
+.btn-secondary {
+    background-color: var(--gray);
+}
+
+.btn-secondary:hover {
+    background-color: #4b5563;
+}
+
 .btn-danger {
     background-color: var(--danger);
 }
@@ -305,6 +313,66 @@ footer {
     font-size: 0.9rem;
 }
 
+/* Spinner for loading states */
+.spinner {
+    border: 2px solid var(--gray-light);
+    border-top: 2px solid var(--primary);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* File summary styles */
+.file-summary {
+    background-color: #f8f9fa;
+    border: 1px solid var(--gray-light);
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.file-summary h4 {
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.file-summary .summary-content {
+    color: var(--gray);
+    margin-bottom: 0.75rem;
+}
+
+.file-summary .summary-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.file-summary .btn {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.85rem;
+}
+
+.file-summary.loading {
+    text-align: center;
+    color: var(--gray);
+}
+
+.file-summary.error {
+    background-color: #fee2e2;
+    border-color: #fecaca;
+    color: #991b1b;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     header .container {
@@ -328,6 +396,7 @@ footer {
         width: 100%;
     }
 }
+
 /* Add these styles to your existing CSS file */
 
 /* Hidden class for nav items */
