@@ -66,14 +66,24 @@
             const data = await response.json();
             
             if (response.ok) {
-                alert('Account created successfully! Since we are in development mode, please check the terminal for the verification link.');
+                // Show different messages based on debug mode from API response
+                let message = '✅ Account created successfully!\n\n';
+                
+                if (data.debug_mode) {
+                    message += '🔧 Development Mode: Please check the terminal/console for the email verification link.';
+                } else {
+                    message += '📧 Production Mode: Please check your email inbox for the verification link to complete your registration.\n\n' +
+                              '💡 Tip: If you don\'t see the email, check your spam folder.';
+                }
+                
+                alert(message);
                 window.location.href = '/login/';
             } else {
                 // Show specific error messages if available
                 if (data.email) {
-                    alert(`Email error: ${data.email}`);
+                    alert(`📧 Email error: ${data.email}`);
                 } else if (data.password) {
-                    alert(`Password error: ${data.password}`);
+                    alert(`🔒 Password error: ${data.password}`);
                 } else {
                     const errorMessages = Object.values(data).flat().join('\n');
                     alert(errorMessages || 'Signup failed');
@@ -81,7 +91,7 @@
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred during signup. Please try again.');
+            alert('❌ An error occurred during signup. Please try again.');
         }
     });
 </script>

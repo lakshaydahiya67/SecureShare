@@ -70,10 +70,15 @@ class SignupView(generics.CreateAPIView):
         encrypted_url = encrypt_url_token(token)
         
         # Modified message to inform about development mode
-        return Response({
-            "message": "User created successfully. Since we're in development mode, please check the terminal for the verification link.",
-            "verification_url": encrypted_url
-        }, status=status.HTTP_201_CREATED)
+        if response.ok:
+            return Response({
+                'message': 'User created successfully',
+                'debug_mode': settings.DEBUG,
+                'user': {
+                    'email': user.email,
+                    'user_type': user.user_type
+                }
+            }, status=status.HTTP_201_CREATED)
 
 class VerifyEmailView(APIView):
     permission_classes = [permissions.AllowAny]
