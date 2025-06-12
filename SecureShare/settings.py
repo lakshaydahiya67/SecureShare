@@ -20,7 +20,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-1b^8&5%c$sgunvrkv0b#w
 
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['*.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['secureshare-2cc7.onrender.com', 'localhost', '127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
