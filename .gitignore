@@ -67,3 +67,4 @@ htmlcov/
 .tox/
 
 .github/
+.env.*
