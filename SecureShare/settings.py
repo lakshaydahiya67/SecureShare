@@ -152,7 +152,7 @@ REST_FRAMEWORK = {
 }
 
 # Encryption Configuration
-ENCRYPTION_KEY = os.environ.get('ENCRYPTION_KEY', base64.urlsafe_b64encode(os.urandom(32)))
+ENCRYPTION_KEY = base64.urlsafe_b64encode(os.urandom(32))
 
 # Security settings
 CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
