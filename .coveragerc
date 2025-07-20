@@ -1,0 +1,38 @@
+[run]
+source = .
+omit = 
+    */venv/*
+    */virtualenv/*
+    */.venv/*
+    */env/*
+    */migrations/*
+    */settings/*
+    manage.py
+    */wsgi.py
+    */asgi.py
+    */test_*.py
+    */tests.py
+    */__pycache__/*
+    .pytest_cache/*
+    htmlcov/*
+    staticfiles/*
+    static/*
+    media/*
+    build.sh
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise AssertionError
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    class .*\(Protocol\):
+    @(abc\.)?abstractmethod
+
+[html]
+directory = htmlcov
+title = SecureShare Test Coverage Report
+
+[xml]
+output = coverage.xml
