@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework import status, generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -70,15 +70,14 @@ class SignupView(generics.CreateAPIView):
         encrypted_url = encrypt_url_token(token)
         
         # Modified message to inform about development mode
-        if response.ok:
-            return Response({
-                'message': 'User created successfully',
-                'debug_mode': settings.DEBUG,
-                'user': {
-                    'email': user.email,
-                    'user_type': user.user_type
-                }
-            }, status=status.HTTP_201_CREATED)
+        return Response({
+            'message': 'User created successfully',
+            'debug_mode': settings.DEBUG,
+            'user': {
+                'email': user.email,
+                'user_type': user.user_type
+            }
+        }, status=status.HTTP_201_CREATED)
 
 class VerifyEmailView(APIView):
     permission_classes = [permissions.AllowAny]
