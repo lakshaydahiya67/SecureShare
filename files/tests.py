@@ -5,11 +5,13 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
+from django.http import FileResponse
 from rest_framework import status
 from rest_framework.test import APITestCase
 import os
 import tempfile
 from datetime import timedelta
+import uuid
 
 from files.models import File, FileAccess, get_file_path
 from files.serializers import FileSerializer, FileListSerializer, FileDownloadSerializer
@@ -504,7 +506,7 @@ class FileDownloadViewTests(BaseAPITestCase):
     
     def test_download_file_nonexistent_access(self):
         """Test file download with nonexistent access token"""
-        fake_token = encrypt_url_token("nonexistent-uuid")
+        fake_token = encrypt_url_token(str(uuid.uuid4()))
         download_url = reverse('api-file-download', kwargs={'token': fake_token})
         
         response = self.client.get(download_url)

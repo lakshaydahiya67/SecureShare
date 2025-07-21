@@ -24,7 +24,7 @@ User = get_user_model()
 class CompleteUserJourneyTests(BaseAPITestCase):
     """Integration tests for complete user journeys through the application"""
     
-    @patch('django.core.mail.send_mail')
+    @patch('users.views.send_mail')
     def test_complete_client_user_journey(self, mock_send_mail):
         """Test complete client user journey: signup -> verify -> login -> browse files -> download"""
         
@@ -100,7 +100,7 @@ class CompleteUserJourneyTests(BaseAPITestCase):
         # Verify email was sent during signup
         mock_send_mail.assert_called_once()
     
-    @patch('django.core.mail.send_mail')
+    @patch('users.views.send_mail')
     def test_complete_operations_user_journey(self, mock_send_mail):
         """Test complete operations user journey: signup -> verify -> login -> upload -> manage -> summarize"""
         
