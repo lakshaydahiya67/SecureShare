@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
-from django.http import FileResponse
+from django.http import FileResponse, Http404
 from django.conf import settings
 from rest_framework import status, generics, permissions
 from rest_framework.response import Response
@@ -180,6 +180,11 @@ class FileSummarizeView(APIView):
                 "summary": summary
             }, status=status.HTTP_200_OK)
             
+        except Http404:
+            return Response(
+                {"error": "File not found"}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
         except ValueError as e:
             # Handle configuration errors (missing API key, etc.)
             return Response(

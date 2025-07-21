@@ -190,7 +190,7 @@ class AIServiceTests(BaseTestCase):
         ]
         self.assertEqual(result, "\n".join(expected_lines))
     
-    @patch('core.ai_service.Presentation')
+    @patch('pptx.Presentation')
     def test_extract_from_pptx(self, mock_presentation):
         """Test PPTX text extraction"""
         # Mock presentation with slides and shapes
