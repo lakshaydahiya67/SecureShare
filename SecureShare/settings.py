@@ -73,7 +73,10 @@ WSGI_APPLICATION = 'SecureShare.wsgi.application'
 # Use PostgreSQL if DATABASE_URL is provided, otherwise SQLite
 if os.environ.get('DATABASE_URL'):
     DATABASES = {
-        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
+        'default': dj_database_url.parse(os.environ.get('DATABASE_URL')),
+        'OPTIONS': {
+            'sslmode': 'require'
+        }
     }
 else:
     DATABASES = {
