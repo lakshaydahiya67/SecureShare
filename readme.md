@@ -186,6 +186,20 @@ Use the RESTful API for programmatic access:
 
 ## Development
 
+### Running Tests
+
+To run tests with coverage:
+```bash
+pytest  # This will generate coverage reports in htmlcov/ and coverage.xml
+```
+
+To view the coverage report in your browser:
+```bash
+open htmlcov/index.html  # On macOS
+# or
+xdg-open htmlcov/index.html  # On Linux
+```
+
 ### Project Dependencies
 
 Key packages used in this project:

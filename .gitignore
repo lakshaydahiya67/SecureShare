@@ -68,3 +68,5 @@ htmlcov/
 
 .github/
 .env.*
+
+coverage.xml
