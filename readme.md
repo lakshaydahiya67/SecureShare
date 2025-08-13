@@ -77,6 +77,8 @@ SecureShare/
 - Python 3.8+
 - pip
 - virtualenv (recommended)
+- Google Gemini API key (for AI features)
+- Email account with app password (optional, for production email features)
 
 ### Installation
 
@@ -104,31 +106,56 @@ SecureShare/
    cd SecureShare
    ```
 
-2. Set up the database:
+2. **Create environment configuration**:
+   ```bash
+   # Copy the example environment file
+   cp .env.example .env
+   ```
+
+3. **Get your API keys**:
+   
+   **Google Gemini API Key** (Required for AI features):
+   - Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Sign in with your Google account
+   - Click "Create API Key"
+   - Copy the generated key
+   
+   **Django Secret Key** (Required):
+   - Generate a secure key using: `python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"`
+   - Or use an online generator like [djecrety.ir](https://djecrety.ir/)
+
+4. **Configure your .env file** with your actual values:
+   ```bash
+   # Open .env in your text editor and update:
+   
+   # Required: Paste your actual Gemini API key
+   GEMINI_API_KEY=AIzaSyC...your-actual-key-here
+   
+   # Required: Paste your generated Django secret key  
+   SECRET_KEY=django-insecure-your-actual-key-here
+   
+   # Development settings
+   DEBUG=True
+   
+   # Optional: Configure email (defaults to console for development)
+   EMAIL_HOST_USER=your-email@gmail.com
+   EMAIL_HOST_PASSWORD=your-app-password
+   
+   # Optional: Database (defaults to SQLite)
+   # DATABASE_URL=postgresql://user:password@host:port/dbname
+   ```
+
+5. **Set up the database**:
    ```bash
    python manage.py migrate
    ```
 
-3. Create a superuser (optional, for admin access):
+6. **Create a superuser** (optional, for admin access):
    ```bash
    python manage.py createsuperuser
+   # OR use the automated command:
+   python manage.py create_superuser_if_none_exists
    ```
-
-4. Configure environment variables:
-   ```bash
-   # Create .env file in the project root
-   GEMINI_API_KEY=your-gemini-api-key-here
-   ```
-
-5. Configure email settings in `settings.py` for your environment:
-   - For development: Uses console backend (emails printed to console)
-   - For production: Configure SMTP settings
-
-6. For production deployment:
-   - Set a secure `SECRET_KEY` in environment variables
-   - Set `DEBUG = False`
-   - Configure proper database (PostgreSQL recommended)
-   - Set up proper email backend (SMTP)
 
 ### Running the Server
 
