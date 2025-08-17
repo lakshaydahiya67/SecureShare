@@ -8,26 +8,11 @@ on:
 
 env:
   DJANGO_SETTINGS_MODULE: SecureShare.settings
-  DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
   SECRET_KEY: test-secret-key-for-github-actions
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: test_db
-        options: >
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
     
     strategy:
       max-parallel: 4
