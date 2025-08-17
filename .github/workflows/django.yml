@@ -44,23 +44,8 @@ jobs:
     - name: Run database migrations
       run: |
         python manage.py migrate
-        
-    - name: Run linting
-      run: |
-        # Add linting commands here if you have them configured
-        # python -m flake8 .
-        # python -m black --check .
-        echo "Linting step - configure your preferred linters"
-        
+                
     - name: Run tests with pytest
       run: |
         pytest --cov=. --cov-report=term-missing --cov-report=xml --tb=short
         
-    - name: Upload coverage reports
-      uses: codecov/codecov-action@v3
-      if: matrix.python-version == '3.11'
-      with:
-        file: ./coverage.xml
-        flags: unittests
-        name: codecov-umbrella
-        fail_ci_if_error: false
