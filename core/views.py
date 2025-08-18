@@ -17,5 +17,9 @@ def home_view(request):
 
 @login_required
 def logout_view(request):
-    logout(request)
-    return redirect('home')
+    if request.method == 'POST':
+        logout(request)
+        return redirect('home')
+    else:
+        # For GET requests, redirect to home (or could show a logout confirmation page)
+        return redirect('home')

@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.http import FileResponse, Http404
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from rest_framework import status, generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -13,10 +14,12 @@ from core.permissions import IsOperationsUser, IsClientUser
 from core.encryption import encrypt_url_token, decrypt_url_token, get_token_expiry
 from core.ai_service import AIService
 
+@login_required
 def upload_view(request):
     """Render the file upload template"""
     return render(request, 'files/upload.html')
 
+@login_required
 def list_view(request):
     """Render the file list template"""
     return render(request, 'files/list.html')

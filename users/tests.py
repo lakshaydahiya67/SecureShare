@@ -6,7 +6,6 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from rest_framework.authtoken.models import Token
 from django.core import mail
 import uuid
 
@@ -367,12 +366,11 @@ class LoginViewTests(BaseAPITestCase):
         response = self.client.post(self.login_url, data)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('token', response.data)
+        self.assertNotIn('token', response.data)  # No token in session auth
         self.assertIn('user', response.data)
         
-        # Verify token was created
-        token = Token.objects.get(user=self.verified_user)
-        self.assertEqual(response.data['token'], token.key)
+        # Verify session was created - check if user is authenticated
+        self.assertTrue('sessionid' in response.cookies or '_auth_user_id' in self.client.session)
     
     def test_login_invalid_credentials(self):
         """Test login with invalid credentials"""
@@ -410,7 +408,8 @@ class LoginViewTests(BaseAPITestCase):
         response = self.client.post(self.login_url, data)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('token', response.data)
+        self.assertNotIn('token', response.data)  # No token in session auth
+        self.assertIn('user', response.data)
     
     def test_login_missing_fields(self):
         """Test login with missing required fields"""
@@ -545,7 +544,8 @@ class UserAuthenticationFlowTests(BaseAPITestCase):
         
         login_response = self.client.post(reverse('api-login'), login_data)
         self.assertEqual(login_response.status_code, status.HTTP_200_OK)
-        self.assertIn('token', login_response.data)
+        self.assertNotIn('token', login_response.data)  # Session auth doesn't return tokens
+        self.assertIn('user', login_response.data)
         
         # Verify email was sent during signup
         mock_send_mail.assert_called_once()

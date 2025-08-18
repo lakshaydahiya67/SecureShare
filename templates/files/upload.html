@@ -28,13 +28,11 @@
 </div>
 
 <script>
-    // Auth check
-    document.addEventListener('DOMContentLoaded', () => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            window.location.href = '/login/';
-        }
-    });
+    // Helper function to get CSRF token
+    function getCSRFToken() {
+        const csrfCookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('csrftoken='));
+        return csrfCookie ? csrfCookie.split('=')[1] : '';
+    }
     
     // File selection preview
     document.getElementById('file').addEventListener('change', (e) => {
@@ -52,7 +50,6 @@
     document.getElementById('upload-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const token = localStorage.getItem('token');
         const formData = new FormData();
         formData.append('title', document.getElementById('title').value);
         formData.append('file', document.getElementById('file').files[0]);
@@ -61,8 +58,9 @@
             const response = await fetch('/api/files/upload/', {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': getCSRFToken(),
                 },
+                credentials: 'same-origin',
                 body: formData,
             });
             
@@ -71,6 +69,7 @@
             if (response.ok) {
                 alert('File uploaded successfully!');
                 document.getElementById('upload-form').reset();
+                document.querySelector('.file-preview').innerHTML = '<p>No file selected</p>';
             } else {
                 alert(data.error || 'Upload failed');
             }

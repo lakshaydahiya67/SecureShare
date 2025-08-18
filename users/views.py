@@ -2,8 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework import status, generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
@@ -140,9 +139,9 @@ class LoginView(APIView):
         if not user.is_email_verified and user.user_type == User.UserType.CLIENT:
             return Response({"error": "Email not verified"}, status=status.HTTP_401_UNAUTHORIZED)
         
-        token, _ = Token.objects.get_or_create(user=user)
+        # Create Django session
+        login(request, user)
         
         return Response({
-            "token": token.key,
             "user": UserSerializer(user).data
         })

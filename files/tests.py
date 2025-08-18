@@ -289,7 +289,7 @@ class FileUploadViewTests(BaseAPITestCase, AuthenticatedTestMixin):
         
         response = self.client.post(self.upload_url, data, format='multipart')
         
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
     
     def test_upload_invalid_file_type(self):
         """Test file upload with invalid file type"""
@@ -377,7 +377,7 @@ class FileListViewTests(BaseAPITestCase, AuthenticatedTestMixin):
         """Test file listing denied for unauthenticated user"""
         response = self.client.get(self.list_url)
         
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
     
     def test_list_files_ordered_by_upload_date(self):
         """Test files are ordered by upload date (newest first)"""
@@ -435,7 +435,7 @@ class FileDownloadLinkViewTests(BaseAPITestCase, AuthenticatedTestMixin):
         """Test download link generation denied for unauthenticated user"""
         response = self.client.get(self.download_link_url)
         
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
     
     def test_get_download_link_nonexistent_file(self):
         """Test download link generation for nonexistent file"""
@@ -562,7 +562,7 @@ class FileSummarizeViewTests(BaseAPITestCase, AuthenticatedTestMixin):
         """Test file summarization denied for unauthenticated user"""
         response = self.client.get(self.summarize_url)
         
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
     
     def test_summarize_file_nonexistent(self):
         """Test file summarization for nonexistent file"""

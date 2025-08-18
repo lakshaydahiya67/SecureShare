@@ -2,7 +2,6 @@ import pytest
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from rest_framework.test import APITestCase, APIClient
-from rest_framework.authtoken.models import Token
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.conf import settings
 import tempfile
@@ -54,11 +53,14 @@ class BaseAPITestCase(APITestCase):
                 os.remove(temp_file)
         super().tearDown()
     
-    def authenticate_user(self, user):
-        """Authenticate a user for API requests"""
-        token, created = Token.objects.get_or_create(user=user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Token {token.key}')
-        return token
+    def authenticate_user(self, user, password='testpass123'):
+        """Authenticate a user for API requests using session login"""
+        # Use Django's login method for session authentication
+        login_successful = self.client.login(username=user.email, password=password)
+        if not login_successful:
+            # Fallback to force_authenticate for unit tests where password might not be set
+            self.client.force_authenticate(user=user)
+        return user
     
     def unauthenticate(self):
         """Remove authentication from the client"""
@@ -142,8 +144,8 @@ def client_user():
 def authenticated_api_client(operations_user):
     """Pytest fixture for authenticated API client"""
     client = APIClient()
-    token, created = Token.objects.get_or_create(user=operations_user)
-    client.credentials(HTTP_AUTHORIZATION=f'Token {token.key}')
+    # Use force_authenticate for pytest fixtures as it's more reliable in test environment
+    client.force_authenticate(user=operations_user)
     return client
 
 

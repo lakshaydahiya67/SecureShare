@@ -14,12 +14,23 @@
             <nav>
                 <ul id="nav-links">
                     <li><a href="{% url 'home' %}">Home</a></li>
-                    <li id="ops-upload-link" class="hidden"><a href="{% url 'file-upload' %}">Upload Files</a></li>
-                    <li id="ops-files-link" class="hidden"><a href="{% url 'file-list' %}">View All Files</a></li>
-                    <li id="client-files-link" class="hidden"><a href="{% url 'file-list' %}">My Files</a></li>
-                    <li id="login-link"><a href="{% url 'login' %}">Login</a></li>
-                    <li id="signup-link"><a href="{% url 'signup' %}" class="btn">Sign Up</a></li>
-                    <li id="logout-link" class="hidden"><a href="#" onclick="handleLogout(event)">Logout</a></li>
+                    {% if user.is_authenticated %}
+                        {% if user.is_operations_user %}
+                            <li><a href="{% url 'file-upload' %}">Upload Files</a></li>
+                            <li><a href="{% url 'file-list' %}">View All Files</a></li>
+                        {% elif user.is_client_user %}
+                            <li><a href="{% url 'file-list' %}">My Files</a></li>
+                        {% endif %}
+                        <li>
+                            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="logout-btn" style="background: none; border: none; color: inherit; text-decoration: underline; cursor: pointer; font: inherit;">Logout</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}">Login</a></li>
+                        <li><a href="{% url 'signup' %}" class="btn">Sign Up</a></li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>
@@ -47,35 +58,7 @@
         </div>
     </footer>
 
-    <script>
-        // Check authentication and update navigation on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            const token = localStorage.getItem('token');
-            const userType = localStorage.getItem('userType');
-            
-            if (token) {
-                // User is logged in
-                document.getElementById('login-link').classList.add('hidden');
-                document.getElementById('signup-link').classList.add('hidden');
-                document.getElementById('logout-link').classList.remove('hidden');
-                
-                if (userType === 'OPS') {
-                    document.getElementById('ops-upload-link').classList.remove('hidden');
-                    document.getElementById('ops-files-link').classList.remove('hidden');
-                } else if (userType === 'CLIENT') {
-                    document.getElementById('client-files-link').classList.remove('hidden');
-                }
-            }
-        });
-        
-        // Handle logout
-        function handleLogout(event) {
-            event.preventDefault();
-            localStorage.removeItem('token');
-            localStorage.removeItem('userType');
-            window.location.href = '{% url "home" %}';
-        }
-    </script>
+    <!-- Authentication is now handled server-side via Django sessions -->
 
     {% block scripts %}{% endblock %}
 </body>

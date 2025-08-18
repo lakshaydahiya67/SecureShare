@@ -15,7 +15,7 @@ SecureShare is a secure file sharing platform built with Django that enables sec
 - **AI-Powered File Summarization**: Generate intelligent summaries of document contents using Google Gemini AI
 
 ### Security Features
-- **Token-Based Authentication**: RESTful API with secure token authentication
+- **Session-Based Authentication**: RESTful API with Django session authentication and CSRF protection
 - **Encrypted File Access**: Download links use encrypted tokens for secure file access
 - **Session Management**: Web interface with proper session handling
 - **File Upload Validation**: Strict file type and size validation
@@ -31,7 +31,7 @@ SecureShare is a secure file sharing platform built with Django that enables sec
 - **Backend**: Django 5.2 + Django REST Framework
 - **Database**: SQLite (development) / PostgreSQL (production ready)
 - **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
-- **Authentication**: Django Token Authentication
+- **Authentication**: Django Session Authentication with CSRF protection
 - **File Security**: Cryptography library with Fernet encryption
 - **Email**: Django Email Framework (console backend for development)
 - **AI Integration**: Google Gemini for document analysis and summarization
@@ -192,11 +192,12 @@ SecureShare/
 
 Use the RESTful API for programmatic access:
 
-1. **Authenticate**: POST to `/api/users/login/` to get a token
-2. **Set Headers**: Include `Authorization: Token <your-token>` in requests
-3. **Upload Files**: POST multipart/form-data to `/api/files/upload/`
-4. **List Files**: GET `/api/files/list/` to see available files
-5. **Download**: GET `/api/files/download-link/{id}/` then use the token to download
+1. **Authenticate**: POST to `/api/users/login/` to establish a session
+2. **Include Cookies**: Ensure session cookies are included in subsequent requests
+3. **CSRF Protection**: Include `X-CSRFToken` header for unsafe HTTP methods
+4. **Upload Files**: POST multipart/form-data to `/api/files/upload/` (with CSRF token)
+5. **List Files**: GET `/api/files/list/` to see available files
+6. **Download**: GET `/api/files/download-link/{id}/` (authenticated) then use the download token
 
 ## File Security
 
@@ -206,10 +207,11 @@ Use the RESTful API for programmatic access:
 - Secure file storage with random UUIDs
 
 ### Download Security
-- Single-use encrypted tokens
+- Single-use encrypted download tokens
 - Time-based expiration (24 hours)
 - Access logging and tracking
 - Role-based access control
+- Session-based authentication with CSRF protection
 
 ## Development
 
@@ -242,8 +244,9 @@ Key packages used in this project:
 ### Database Models
 
 - **User**: Custom user model with role-based fields
-- **File**: File metadata and storage information
+- **File**: File metadata and storage information  
 - **FileAccess**: Download token management and tracking
+- **Sessions**: User authentication state management (Django built-in)
 
 ### Testing
 

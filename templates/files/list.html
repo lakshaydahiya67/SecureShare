@@ -12,32 +12,25 @@
 </div>
 
 <script>
-    // Auth check
+    // Helper function to get CSRF token
+    function getCSRFToken() {
+        const csrfCookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('csrftoken='));
+        return csrfCookie ? csrfCookie.split('=')[1] : '';
+    }
+    
+    // Main content loading
     document.addEventListener('DOMContentLoaded', async () => {
-        const token = localStorage.getItem('token');
-        const userType = localStorage.getItem('userType');
-        
-        if (!token) {
-            window.location.href = '/login/';
-            return;
-        }
         
         const filesList = document.getElementById('files-list');
         const pageTitle = document.querySelector('h2');
         
-        // Update title based on user type
-        if (userType === 'OPS') {
-            pageTitle.textContent = 'All Uploaded Files';
-        } else {
-            pageTitle.textContent = 'Available Files';
-        }
+        // Note: User type and title will be determined server-side in future iterations
+        // For now, keeping generic title
         
         try {
             const response = await fetch('/api/files/list/', {
                 method: 'GET',
-                headers: {
-                    'Authorization': `Token ${token}`,
-                },
+                credentials: 'same-origin',
             });
             
             const data = await response.json();
@@ -94,14 +87,11 @@
     
     async function getDownloadLink(e) {
         const fileId = e.target.dataset.id;
-        const token = localStorage.getItem('token');
         
         try {
             const response = await fetch(`/api/files/download-link/${fileId}/`, {
                 method: 'GET',
-                headers: {
-                    'Authorization': `Token ${token}`,
-                },
+                credentials: 'same-origin',
             });
             
             const data = await response.json();
@@ -119,7 +109,6 @@
     
     async function getSummary(e) {
         const fileId = e.target.dataset.id;
-        const token = localStorage.getItem('token');
         const fileItem = document.querySelector(`[data-file-id="${fileId}"]`);
         
         // Check if summary is already shown
@@ -139,9 +128,7 @@
         try {
             const response = await fetch(`/api/files/summarize/${fileId}/`, {
                 method: 'GET',
-                headers: {
-                    'Authorization': `Token ${token}`,
-                },
+                credentials: 'same-origin',
             });
             
             const data = await response.json();

@@ -7,7 +7,6 @@ from django.urls import reverse
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
-from rest_framework.authtoken.models import Token
 import tempfile
 import os
 from datetime import timedelta
@@ -61,11 +60,10 @@ class CompleteUserJourneyTests(BaseAPITestCase):
         
         login_response = self.client.post(reverse('api-login'), login_data)
         self.assertEqual(login_response.status_code, status.HTTP_200_OK)
-        self.assertIn('token', login_response.data)
+        self.assertNotIn('token', login_response.data)  # Session auth doesn't return tokens
         
-        # Set authentication for subsequent requests
-        token = login_response.data['token']
-        self.client.credentials(HTTP_AUTHORIZATION=f'Token {token}')
+        # Use force_authenticate for subsequent API requests in tests
+        self.client.force_authenticate(user=user)
         
         # Step 4: Create a file for testing (as ops user first)
         ops_user = OperationsUserFactory()
@@ -85,7 +83,7 @@ class CompleteUserJourneyTests(BaseAPITestCase):
         download_link = download_link_response.data['download_link']
         
         # Step 7: Download file using the link (no auth required)
-        self.client.credentials()  # Remove authentication
+        self.client.force_authenticate(user=None)  # Remove authentication
         
         token = download_link.split('/download/')[-1].rstrip('/')
         
@@ -132,10 +130,10 @@ class CompleteUserJourneyTests(BaseAPITestCase):
         
         login_response = self.client.post(reverse('api-login'), login_data)
         self.assertEqual(login_response.status_code, status.HTTP_200_OK)
+        self.assertNotIn('token', login_response.data)  # Session auth doesn't return tokens
         
-        # Set authentication for subsequent requests
-        token = login_response.data['token']
-        self.client.credentials(HTTP_AUTHORIZATION=f'Token {token}')
+        # Use force_authenticate for subsequent API requests in tests
+        self.client.force_authenticate(user=user)
         
         # Step 4: Upload a file
         file_data = SimpleUploadedFile(
@@ -451,20 +449,20 @@ class ErrorHandlingWorkflowTests(BaseAPITestCase):
             
             self.assertEqual(
                 response.status_code, 
-                status.HTTP_401_UNAUTHORIZED,
-                f"Expected 401 for {method} {url}, got {response.status_code}"
+                status.HTTP_403_FORBIDDEN,
+                f"Expected 403 for {method} {url}, got {response.status_code}"
             )
         
         # Test invalid token
-        self.client.credentials(HTTP_AUTHORIZATION='Token invalid-token')
+        self.client.force_authenticate(user=None)  # Test with no authentication
         
         response = self.client.get(reverse('api-file-list'))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         
         # Test successful access with valid token
         user = OperationsUserFactory()
-        token, created = Token.objects.get_or_create(user=user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Token {token.key}')
+        # Use session authentication
+        self.client.force_authenticate(user=user)
         
         response = self.client.get(reverse('api-file-list'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)

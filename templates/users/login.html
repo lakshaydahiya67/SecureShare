@@ -7,6 +7,7 @@
     <h2>Login to SecureShare</h2>
     
     <form class="auth-form" id="login-form">
+        {% csrf_token %}
         <div class="form-group">
             <label for="email">Email</label>
             <input type="email" id="email" name="email" required>
@@ -28,6 +29,11 @@
 </div>
 
 <script>
+    // Helper function to get CSRF token
+    function getCSRFToken() {
+        return document.querySelector('[name=csrfmiddlewaretoken]').value;
+    }
+    
     document.getElementById('login-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -39,18 +45,16 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken(),
                 },
+                credentials: 'same-origin',
                 body: JSON.stringify({ email, password }),
             });
             
             const data = await response.json();
             
             if (response.ok) {
-                // Store token and user type
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('userType', data.user.user_type);
-                
-                // Redirect based on user type
+                // Redirect based on user type (session is now handled server-side)
                 if (data.user.user_type === 'OPS') {
                     window.location.href = '/upload/';
                 } else {
