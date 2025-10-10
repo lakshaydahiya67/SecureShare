@@ -2,15 +2,38 @@ from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework import status, generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 
 from .serializers import UserSerializer, SignupSerializer, LoginSerializer
 
 User = get_user_model()
+
+def home_view(request):
+    """Homepage view that redirects based on authentication status and user type"""
+    if request.user.is_authenticated:
+        if request.user.is_operations_user:
+            return redirect('file-upload')  # Redirect ops users to upload page
+        elif request.user.is_client_user:
+            return redirect('file-list')    # Redirect client users to files list
+        else:
+            return redirect('admin:index')  # Redirect admin users to admin
+    else:
+        # Show landing page for unauthenticated users
+        return render(request, 'home.html')
+
+@login_required
+def logout_view(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('home')
+    else:
+        # For GET requests, redirect to home (or could show a logout confirmation page)
+        return redirect('home')
 
 def login_view(request):
     return render(request, 'users/login.html')
@@ -65,7 +88,7 @@ class SignupView(generics.CreateAPIView):
         )
         
         # Create an encrypted URL for the response
-        from core.encryption import encrypt_url_token
+        from files.encryption import encrypt_url_token
         encrypted_url = encrypt_url_token(token)
         
         # Modified message to inform about development mode

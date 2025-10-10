@@ -18,14 +18,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from core import views as core_views
 from users import views as user_views
 from files import views as file_views
 
 urlpatterns = [
     # Main pages
-    path('', core_views.home_view, name='home'),
-    path('logout/', core_views.logout_view, name='logout'),
+    path('', user_views.home_view, name='home'),
+    path('logout/', user_views.logout_view, name='logout'),
     
     # User-facing template views
     path('login/', user_views.login_view, name='login'),

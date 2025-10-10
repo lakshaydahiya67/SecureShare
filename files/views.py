@@ -10,9 +10,9 @@ import os
 
 from .models import File, FileAccess
 from .serializers import FileSerializer, FileListSerializer, FileDownloadSerializer
-from core.permissions import IsOperationsUser, IsClientUser
-from core.encryption import encrypt_url_token, decrypt_url_token, get_token_expiry
-from core.ai_service import AIService
+from .permissions import IsOperationsUser, IsClientUser
+from .encryption import encrypt_url_token, decrypt_url_token, get_token_expiry
+from .ai_service import AIService
 
 @login_required
 def upload_view(request):

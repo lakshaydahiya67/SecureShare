@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import File, FileAccess
-from core.validators import validate_file_extension
+from .validators import validate_file_extension
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
