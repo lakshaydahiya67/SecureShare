@@ -1,73 +1,18 @@
-# Python specific
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+*.pyc
 
-# Django specific
-*.log
-local_settings.py
 db.sqlite3
-db.sqlite3-journal
-media/uploads/*
-!media/uploads/.gitkeep
+*.log
 staticfiles/
 
-# Virtual Environment
-venv/
-ENV/
-.env
-
-# IDE specific files
-.idea/
-.vscode/
-*.swp
-*.swo
-.history
-.project
-.classpath
-
-# OS specific files
-.DS_Store
-Thumbs.db
-desktop.ini
-.directory
-
-# SecureShare specific
-.encryption_key
-local_config.py
-secrets.json
-temp/
-
-# Keep upload directory structure but ignore contents
-media/uploads/*
+# Media Files
+media/uploads/
 !media/uploads/.gitkeep
 
-# Testing
-.coverage
-htmlcov/
-.pytest_cache/
-.tox/
-
-.github/
+# Environment
+venv/
+.env
 .env.*
 !.env.example
 
-coverage.xml
+.vscode/
