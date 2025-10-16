@@ -247,14 +247,6 @@ Key packages used in this project:
 - **FileAccess**: Download token management and tracking
 - **Sessions**: User authentication state management (Django built-in)
 
-### Testing
-
-For API testing, refer to the Postman collection in `/postman/check_api.txt` which includes:
-- Complete API endpoint documentation
-- Sample requests and responses
-- Authentication workflows
-- File upload/download examples
-
 ## Production Deployment
 
 ### Environment Variables
@@ -269,33 +261,3 @@ EMAIL_HOST_PASSWORD=your-email-password
 ENCRYPTION_KEY=your-32-byte-encryption-key
 GEMINI_API_KEY=your-gemini-api-key
 ```
-
-### Security Checklist
-- [ ] Set `DEBUG = False`
-- [ ] Configure secure `SECRET_KEY`
-- [ ] Set up proper database (PostgreSQL)
-- [ ] Configure SMTP email backend
-- [ ] Set up HTTPS/SSL
-- [ ] Configure proper file storage (AWS S3, etc.)
-- [ ] Set up monitoring and logging
-
-### Deployment Options
-- **Traditional**: Apache/Nginx + Gunicorn
-- **Container**: Docker deployment
-- **Cloud**: Heroku, AWS, DigitalOcean
-- **Serverless**: AWS Lambda with Zappa
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Support
-
-For support and questions:
-- Create an issue in the GitHub repository
-- Check the API documentation in `/postman/check_api.txt`
-- Review the code comments for implementation details
